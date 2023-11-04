@@ -9,6 +9,15 @@ class RepositorioDePerfis {
     incluir(perfil) {
         this._perfis.push(perfil);
     }
+    consultarPorNome(nome_procurado) {
+        let resultado_da_consulta = null;
+        for (const perfil_atual of this._perfis) {
+            if (perfil_atual.getNome() == nome_procurado) {
+                resultado_da_consulta = perfil_atual;
+            }
+        }
+        return resultado_da_consulta;
+    }
     consultar(id, nome, email) {
         let resultado_da_consulta = null;
         if (id != undefined) {
