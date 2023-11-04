@@ -14,7 +14,15 @@ class RepositorioDePerfis{
 
         this._perfis.push(perfil)
     }
-
+    consultarPorNome(nome_procurado: string){
+        let resultado_da_consulta:Perfil | null=null
+        for (const perfil_atual of this._perfis) {
+            if(perfil_atual.getNome()==nome_procurado){
+                resultado_da_consulta=perfil_atual
+            }
+        }
+        return resultado_da_consulta
+    }
     consultar(id?: number, nome?: string, email?: string): Perfil | null{
         let resultado_da_consulta: Perfil | null=null;
         if(id!=undefined){

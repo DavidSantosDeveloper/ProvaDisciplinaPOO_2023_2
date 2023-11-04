@@ -24,7 +24,21 @@ class Perfil{
         return this._postagens
     }
     adicicionarPostagens(nova_postagem:Postagem){
+        //FAIL FAST
+        if(this.verificarSePostagemExiste(nova_postagem)){
+            return
+        }
         this._postagens.push(nova_postagem)
+    }
+    verificarSePostagemExiste(nova_postagem:Postagem){
+        let resultado_da_consulta:boolean=false
+        for (const postagem_atual of this._postagens) {
+            if( postagem_atual.getId()==nova_postagem.getId()){
+                resultado_da_consulta=true
+            }
+           
+        }
+        return resultado_da_consulta
     }
 }
 

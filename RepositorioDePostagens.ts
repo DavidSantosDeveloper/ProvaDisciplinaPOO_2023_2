@@ -10,6 +10,9 @@ class RepositorioDePostagens{
     constructor(postagens: Postagem[]){
         this._postagens=postagens
     }
+    getPostagens(){
+        return this._postagens
+    }
     incluir(postagem: Postagem): void{
         //FAIL FAST
         if(this.consultarPorID(postagem.getId())!=null){

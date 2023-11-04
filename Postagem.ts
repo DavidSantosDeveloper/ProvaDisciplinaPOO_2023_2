@@ -40,7 +40,7 @@ class Postagem{
         this._curtida ++
     }
     descurtir(){
-        this._descurtida --
+        this._descurtida++
     }
     ehPopular(){
         if(this._curtida>this._descurtida){

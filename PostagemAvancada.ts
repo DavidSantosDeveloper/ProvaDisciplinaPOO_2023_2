@@ -12,6 +12,13 @@ class PostagemAvancada extends Postagem{
             this._visualizacoesRestantes = visualizacoesRestantes;
         }
 
+    getHashtagEmString(){
+        let soma_hastags=""
+        for (const hashtag_atual of this._hashtags) {
+            soma_hastags+=`${hashtag_atual} `
+        }
+        return soma_hastags
+    }
     getVisualizacoesRestantes(){
         return this._visualizacoesRestantes
     }

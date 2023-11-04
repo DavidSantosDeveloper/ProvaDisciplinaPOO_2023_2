@@ -12,14 +12,17 @@ class App {
     exibirMenu() {
         let opcao = 0;
         while (opcao !== 7) {
-            console.log("Menu da Rede Social");
-            console.log("1. Incluir Perfil");
+            console.log("\n \n \n ");
+            console.log("╔═══════════════════════════════╗");
+            console.log("║     Menu da Rede Social       ║");
+            console.log("╚═══════════════════════════════╝");
+            console.log("\n \n 1. Incluir Perfil");
             console.log("2. Consultar Perfil");
             console.log("3. Incluir Postagem");
             console.log("4. Consultar Postagens");
             console.log("5. Curtir Postagem");
             console.log("6. Descurtir Postagem");
-            console.log("7. Sair");
+            console.log("7. Sair \n");
             opcao = this.obterOpcao();
             if (opcao == 1) {
                 this.incluirPerfil();
@@ -46,12 +49,16 @@ class App {
         }
     }
     obterOpcao() {
-        return parseInt(input.question("Escolha uma opção: "));
+        return parseInt(input.question("\n Escolha uma opcao: "));
     }
     incluirPerfil() {
-        console.log("\n# ___Cadastrar perfil___\n");
-        let nome = input.question("Digite o nome do usuario:");
+        console.log("\n \n \n");
+        console.log("|---------------------------------|");
+        console.log("|      Cadrastrar Perfil          |");
+        console.log("|---------------------------------|");
+        let nome = input.question("\n \nDigite o nome do usuario:");
         let email = input.question("Digite o email do usuario:");
+        console.log("\n \n \n");
         let lista_de_perfis_cadrastrados = this._redeSocial.getRepositorioDePerfis().getPerfis();
         let perfil_cadrastrado;
         //Caso da ser lista de perfis está vazia.
@@ -67,45 +74,45 @@ class App {
         }
     }
     consultarPerfil() {
-        console.log(`\n_________________________________
-                   |      Consultar Perfil          |
-                   |________________________________|
-                   \n`);
+        console.log("\n \n \n");
+        console.log("|---------------------------------|");
+        console.log("|      Consultar Perfil           |");
+        console.log("|---------------------------------|");
         let nome_do_usuario_procurado = input.question("\n Digite o nome do usuario:");
         let resultado_da_consulta = this._redeSocial.getRepositorioDePerfis().consultarPorNome(nome_do_usuario_procurado);
         //FAIL FAST
         if (resultado_da_consulta == null) {
-            console.log(`\n usuario não encontrado!!!!!`);
+            console.log(`\n usuario nao encontrado!!!!!\n`);
         }
         else {
-            console.log(`\n Usuario com nome '${nome_do_usuario_procurado}' :`);
+            console.log(`\n Usuario com nome '${nome_do_usuario_procurado}' : \n`);
             console.log(resultado_da_consulta);
         }
     }
     incluirPostagem() {
-        console.log(`\n_________________________________
-                   |      Incluir  Postagens       |
-                   |_______________________________|
-                   \n`);
-        let nome_do_usuario_procurado = input.question("\n Digite o nome do usuario autor da postagem:");
+        console.log("\n \n \n");
+        console.log("|---------------------------------|");
+        console.log("|      Incluir Postagens          |");
+        console.log("|---------------------------------|");
+        let nome_do_usuario_procurado = input.question("\n \n Digite o nome do usuario autor da postagem:");
         let resultado_da_consulta_pelo_perfil_do_autor_da_postagem = this._redeSocial.getRepositorioDePerfis().consultarPorNome(nome_do_usuario_procurado);
         //Verifica se eh um usuario valido.
         while (resultado_da_consulta_pelo_perfil_do_autor_da_postagem == null) {
-            console.log("\n usuario não encontado!!! Digite novamente.");
+            console.log("\n usuario não encontado!!! Digite novamente.\n");
             nome_do_usuario_procurado = input.question("\n Digite o nome do usuario autor da postagem:");
             resultado_da_consulta_pelo_perfil_do_autor_da_postagem = this._redeSocial.getRepositorioDePerfis().consultarPorNome(nome_do_usuario_procurado);
         }
-        let tipo_da_postagem = Number(input.question("\n \n Tipo da postagem 1-Postagem 2-Postagem Avançada : "));
+        let tipo_da_postagem = Number(input.question("\n \n Tipo da postagem 1-Postagem 2-Postagem Avancada : "));
         //verfica se a postagem eh valida
         while (tipo_da_postagem != 1 && tipo_da_postagem != 2) {
-            console.log(`\n opcao invalida!!!! Digite novamente.`);
-            tipo_da_postagem = Number(input.question("\n Tipo da postagem 1-Postagem 2-Postagem Avançada : "));
+            console.log(`\n opcao invalida!!!! Digite novamente\n.`);
+            tipo_da_postagem = Number(input.question("\n Tipo da postagem 1-Postagem 2-Postagem Avancada : "));
         }
         //########## Criar postagem
         let lista_de_postagens = this._redeSocial.getRepositorioDePostagens().getPostagens();
         let postagem_atual;
         if (tipo_da_postagem == 1) {
-            let texto_da_postagem = input.question("Digite o texto da postagem:   \n");
+            let texto_da_postagem = input.question("\n \n Digite o texto da postagem:");
             //>>>>>>>Caso lista de Postagens vazia
             if (lista_de_postagens.length == 0) {
                 postagem_atual = new Postagem(1, texto_da_postagem, 0, 0, new Date(), resultado_da_consulta_pelo_perfil_do_autor_da_postagem);
@@ -121,17 +128,17 @@ class App {
             resultado_da_consulta_pelo_perfil_do_autor_da_postagem.adicicionarPostagens(postagem_atual);
         }
         if (tipo_da_postagem == 2) {
-            let texto_da_postagem = input.question("Digite o texto da postagem:   \n");
-            let numero_de_visualizacoes_maximo = Number(input.question("Digite o numero maximo de visualizacoes:"));
+            let texto_da_postagem = input.question("\n \n Digite o texto da postagem:   \n");
+            let numero_de_visualizacoes_maximo = Number(input.question("\n Digite o numero maximo de visualizacoes:"));
             let lista_de_hashtags = [];
-            let numero_hastag_atual = 0;
+            let numero_hastag_atual = 1;
             while (true) {
-                let hashtag_atual = input.question(`Digite a ${numero_hastag_atual} hashtag(#): `);
+                let hashtag_atual = input.question(`\n Digite a ${numero_hastag_atual} hashtag(#): `);
                 lista_de_hashtags.push(`#${hashtag_atual}`);
                 numero_hastag_atual++;
                 let continuar = true;
                 while (continuar) {
-                    let opcao = input.question(`Deseja adicionar mais hashtags? (S-sim N-Nao):  `);
+                    let opcao = input.question(`\n\n\nDeseja adicionar mais hashtags? (S-sim N-Nao):  `);
                     if (opcao.toUpperCase() == "S")
                         break;
                     else if (opcao.toUpperCase() == "N")
@@ -160,47 +167,52 @@ class App {
         }
     }
     consultarPostagens() {
-        console.log(`\n_________________________________
-                   |      Consultar Postagens       |
-                   |________________________________|
-                   \n`);
+        console.log("\n\n\n");
+        console.log("|---------------------------------|");
+        console.log("|      Consultar Postagens        |");
+        console.log("|---------------------------------|");
+        console.log("\n\n\n");
         let opcao = input.question(`Digite uma opcao: 
                               (1-mostrar Todas as postagens
                                2-mostrar as postagens de 1 perfil
                                3-mostrar uma postagem
                                0-Sair
                                 
-                                ) `);
-        while (isNaN(Number(opcao))) {
-            console.log("\n opcao invalida!!!  digite novamente.");
-            opcao = input.question(`\n Digite uma opcao: 
-              (1-mostrar Todas as postagens
-               2-mostrar as postagens de 1 perfil
-               3-mostrar uma postagem por ID
-               0-Sair
-                
-                ) `);
+          
+                               ) `);
+        /*
+        while(isNaN(Number(opcao))){
+                console.log("\n opcao invalida!!!  digite novamente.")
+                opcao=input.question(`\n Digite uma opcao:
+                (1-mostrar Todas as postagens
+                 2-mostrar as postagens de 1 perfil
+                 3-mostrar uma postagem por ID
+                 0-Sair
+                  
+                  ) `)
+  
         }
+        */
         opcao = Number(opcao);
         //FAIL FAST
-        if (opcao == 0 || opcao != 1 && opcao != 2 && opcao != 3) {
+        if (opcao == 0) {
             return;
         }
         else if (opcao == 1) {
-            console.log(`>>>>>>>>>>>>Todas as postagens da Rede Social<<<<<<<<<<<<<<<<`);
+            console.log(`\n\n\n>>>>>>>>>>>>Todas as postagens da Rede Social<<<<<<<<<<<<<<<<`);
             this.mostrarTodasAsPostagensDaRedeSocialNaTela();
         }
         else if (opcao == 2) {
-            console.log(`>>>>>>>>>>>>Todas as postagens da um Perfil<<<<<<<<<<<<<<<<`);
-            let nome_usuario = input.question("Digite o nome do usuario:");
+            console.log(`\n\n\n>>>>>>>>>>>>Todas as postagens da um Perfil<<<<<<<<<<<<<<<<`);
+            let nome_usuario = input.question("\nDigite o nome do usuario:");
             this.mostrarTodasAsPostagensDeUmPerfilNaTela(nome_usuario);
         }
         else if (opcao == 3) {
-            console.log(`>>>>>>>>>>>>Mostrar Postagem com ID especifico<<<<<<<<<<<<<<<<`);
-            let id_postagem = input.question("Digite o ID da postagem:");
+            console.log(`\n\n\n>>>>>>>>>>>>Mostrar Postagem com ID especifico<<<<<<<<<<<<<<<<`);
+            let id_postagem = input.question("\nDigite o ID da postagem:");
             while (isNaN(Number(id_postagem))) {
-                console.log("valor invalido!!! Digite novamente.");
-                id_postagem = input.question("Digite o ID da postagem:");
+                console.log("\nvalor invalido!!! Digite novamente.");
+                id_postagem = input.question("\nDigite o ID da postagem:");
             }
             id_postagem = Number(id_postagem);
             this.mostrarPostagemPorID(id_postagem);
@@ -215,7 +227,7 @@ class App {
                 lista_de_postagens_avancadas.push(postagem_atual);
             }
             else {
-                lista_de_postagens_simples.push();
+                lista_de_postagens_simples.push(postagem_atual);
             }
         }
         let numero_postagem_simples = 1;
@@ -266,7 +278,7 @@ class App {
                 lista_de_postagens_avancadas.push(postagem_atual);
             }
             else {
-                lista_de_postagens_simples.push();
+                lista_de_postagens_simples.push(postagem_atual);
             }
         }
         let numero_postagem_simples = 1;
