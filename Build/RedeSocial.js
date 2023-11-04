@@ -1,8 +1,15 @@
 import { PostagemAvancada } from "./PostagemAvancada.js";
+export { RedeSocial };
 class RedeSocial {
     constructor(RepositorioDePostagens, RepositorioDePerfis) {
         this._RepositorioDePostagens = RepositorioDePostagens;
         this._RepositorioDePerfis = RepositorioDePerfis;
+    }
+    getRepositorioDePostagens() {
+        return this._RepositorioDePostagens;
+    }
+    getRepositorioDePerfis() {
+        return this._RepositorioDePerfis;
     }
     incluirPerfil(perfil) {
         //FAIL FAST
@@ -98,7 +105,7 @@ class RedeSocial {
     }
     exibirPostagensPorHashtag(hashtag) {
         let postagens_que_ainda_podem_ser_exibidas = [];
-        for (const perfil_atual of this._RepositorioDePerfis.getPerfil()) {
+        for (const perfil_atual of this._RepositorioDePerfis.getPerfis()) {
             for (const postagem_atual of perfil_atual.getPostagens()) {
                 if (postagem_atual instanceof PostagemAvancada) {
                     if (postagem_atual.getVisualizacoesRestantes() > 0) {

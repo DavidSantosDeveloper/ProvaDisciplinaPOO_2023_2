@@ -3,7 +3,7 @@ class RepositorioDePerfis {
     constructor(perfis) {
         this._perfis = perfis;
     }
-    getPerfil() {
+    getPerfis() {
         return this._perfis;
     }
     incluir(perfil) {

@@ -1,6 +1,7 @@
 import {Postagem} from './Postagem.js'
 import {Perfil} from './Perfil.js'
 export {PostagemAvancada}
+
 class PostagemAvancada extends Postagem{
     private _hashtags: string[];
     private _visualizacoesRestantes: number;

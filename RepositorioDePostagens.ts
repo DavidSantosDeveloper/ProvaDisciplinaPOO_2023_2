@@ -1,6 +1,6 @@
-import { Postagem } from "./Postagem.js";
-import { Perfil} from "./Perfil.js";
-import {PostagemAvancada} from './PostagemAvancada.js'
+import { Postagem } from "./Postagem";
+import { Perfil} from "./Perfil";
+import {PostagemAvancada} from './PostagemAvancada';
 export {RepositorioDePostagens}
 
 class RepositorioDePostagens{
@@ -66,9 +66,4 @@ class RepositorioDePostagens{
         return resultado_das_consultas
     }
 
-/*
-    consultar(id: number, texto: string, hashtag: string, perfil: Perfil): Postagem[]{
-
-    }
-*/
 }

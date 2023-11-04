@@ -1,8 +1,9 @@
-import {RepositorioDePostagens} from "./RepositorioDePostagens.js"
-import {RepositorioDePerfis} from "./RespositorioDePerfis.js"
-import {Perfil} from "./Perfil.js"
-import {Postagem} from "./Postagem.js"
-import {PostagemAvancada} from "./PostagemAvancada.js"
+import { RepositorioDePostagens } from "./RepositorioDePostagens";
+import { RepositorioDePerfis } from "./RepositorioDePerfis";
+import {Perfil} from "./Perfil"
+import {Postagem} from "./Postagem"
+import {PostagemAvancada} from "./PostagemAvancada"
+export {RedeSocial}
 
 type relacao_Perfil_E_PostagensAvancadas={
     id_perfil:number

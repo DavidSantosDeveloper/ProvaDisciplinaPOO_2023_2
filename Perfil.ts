@@ -23,5 +23,8 @@ class Perfil{
     getPostagens(){
         return this._postagens
     }
+    adicicionarPostagens(nova_postagem:Postagem){
+        this._postagens.push(nova_postagem)
+    }
 }
 
