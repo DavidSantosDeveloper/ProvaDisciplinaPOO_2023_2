@@ -5,12 +5,6 @@ class RedeSocial {
         this._RepositorioDePostagens = RepositorioDePostagens;
         this._RepositorioDePerfis = RepositorioDePerfis;
     }
-    getRepositorioDePostagens() {
-        return this._RepositorioDePostagens;
-    }
-    getRepositorioDePerfis() {
-        return this._RepositorioDePerfis;
-    }
     incluirPerfil(perfil) {
         //FAIL FAST
         if (perfil.getId() != undefined || perfil.getNome() != undefined || perfil.getEmail() != undefined) {

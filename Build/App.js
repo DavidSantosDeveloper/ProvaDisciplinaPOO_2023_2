@@ -1,38 +1,51 @@
+import { RedeSocial } from "./RedeSocial.js";
 import { Perfil } from "./Perfil.js";
-import prompt from "prompt-sync";
-//criacao do input
-let input = prompt();
 class App {
     constructor(redeSocial) {
         this._redeSocial = redeSocial;
     }
-    iniciar() {
-        let premissao_para_continuar = true;
-        let opcao = '';
-        while (premissao_para_continuar) {
-            console.log(`
-            >>>>>>>>>>>>>>Bem vindo<<<<<<<<<<<< 
-            -Digite uma opção:
-            
-            1 - Criar um perfil
-            2 - Criar uma postagem
-            3 - Criar uma postagem Avançada
-            4 - Consultar um perfil
-            5 - Ver postagens de um perfil
-            6 - ver todas as postagens
-            0 - Sair  \n`);
-            opcao = input("Opção:");
-            switch (opcao) {
-                case "1":
-                    break;
-                case "2":
-                    break;
-                default:
-                    break;
+    exibirMenu() {
+        let opcao = 0;
+        while (opcao !== 7) {
+            console.log("Menu da Rede Social");
+            console.log("1. Incluir Perfil");
+            console.log("2. Consultar Perfil");
+            console.log("3. Incluir Postagem");
+            console.log("4. Consultar Postagens");
+            console.log("5. Curtir Postagem");
+            console.log("6. Descurtir Postagem");
+            console.log("7. Sair");
+            opcao = this.obterOpcao();
+            if (opcao == 1) {
+                this.incluirPerfil();
+            }
+            if (opcao == 2) {
+                this.consultarPerfil();
+            }
+            if (opcao == 3) {
+                this.incluirPostagem();
+            }
+            if (opcao == 4) {
+                this.consultarPostagens();
+            }
+            if (opcao == 5) {
+                this.curtirPostagem();
+            }
+            if (opcao == 6) {
+                this.descurtirPostagem();
+            }
+            if (opcao == 7) {
+                console.log("Fechando...");
+                break;
             }
         }
     }
-    criarPerfil() {
+    obterOpcao() {
+        const input = require("readline-sync");
+        return parseInt(input.question("Escolha uma opção: "));
+    }
+    incluirPerfil() {
+        const input = require("readline-sync");
         console.log("\n# ___Cadastrar perfil___\n");
         let nome = input("Digite o nome do usuario:");
         let email = input("Digite o email do usuario:");
@@ -50,4 +63,17 @@ class App {
             lista_de_perfis_cadrastrados.push(perfil_cadrastrado);
         }
     }
+    consultarPerfil() {
+    }
+    incluirPostagem() {
+    }
+    consultarPostagens() {
+    }
+    curtirPostagem() {
+    }
+    descurtirPostagem() {
+    }
 }
+const redeSocial = new RedeSocial();
+const app = new App(redeSocial);
+app.exibirMenu();

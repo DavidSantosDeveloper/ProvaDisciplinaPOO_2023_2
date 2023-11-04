@@ -1,8 +1,8 @@
-import { RepositorioDePostagens } from "./RepositorioDePostagens";
-import { RepositorioDePerfis } from "./RepositorioDePerfis";
-import {Perfil} from "./Perfil"
-import {Postagem} from "./Postagem"
-import {PostagemAvancada} from "./PostagemAvancada"
+import { RepositorioDePostagens } from "./RepositorioDePostagens.js";
+import { RepositorioDePerfis } from "./RepositorioDePerfis.js";
+import {Perfil} from "./Perfil.js"
+import {Postagem} from "./Postagem.js"
+import {PostagemAvancada} from "./PostagemAvancada.js"
 export {RedeSocial}
 
 type relacao_Perfil_E_PostagensAvancadas={
@@ -123,7 +123,7 @@ class RedeSocial{
 
         let postagens_que_ainda_podem_ser_exibidas:relacao_Perfil_E_PostagensAvancadas[]=[]
           
-        for (const perfil_atual of this._RepositorioDePerfis.getPerfil()) {
+        for (const perfil_atual of this._RepositorioDePerfis.getPerfis()) {
             for (const postagem_atual of perfil_atual.getPostagens()) {
                 if(postagem_atual instanceof PostagemAvancada){
                     if(postagem_atual.getVisualizacoesRestantes()>0){

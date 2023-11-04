@@ -1,6 +1,6 @@
-import { Postagem } from "./Postagem";
-import { Perfil} from "./Perfil";
-import {PostagemAvancada} from './PostagemAvancada';
+import { Postagem } from "./Postagem.js";
+import { Perfil} from "./Perfil.js";
+import {PostagemAvancada} from './PostagemAvancada.js';
 export {RepositorioDePostagens}
 
 class RepositorioDePostagens{
