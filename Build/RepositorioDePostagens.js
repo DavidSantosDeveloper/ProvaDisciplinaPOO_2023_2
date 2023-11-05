@@ -7,6 +7,9 @@ class RepositorioDePostagens {
     getPostagens() {
         return this._postagens;
     }
+    setPostagens(lista_de_postagens) {
+        this._postagens = lista_de_postagens;
+    }
     incluir(postagem) {
         //FAIL FAST
         if (this.consultarPorID(postagem.getId()) != null) {

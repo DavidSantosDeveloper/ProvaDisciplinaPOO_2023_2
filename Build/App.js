@@ -4,12 +4,21 @@ import { Postagem } from "./Postagem.js";
 import { PostagemAvancada } from "./PostagemAvancada.js";
 import { RepositorioDePerfis } from "./RepositorioDePerfis.js";
 import { RepositorioDePostagens } from "./RepositorioDePostagens.js";
+//leitura de dados
 import input from "readline-sync";
+// salvar em arquivos de texto
+import * as fs from 'fs';
 class App {
     constructor(redeSocial) {
+        this.caminho_arquivo_perfis = "./perfis.txt";
+        this.caminho_arquivo_postagens = "./postagens.txt";
         this._redeSocial = redeSocial;
     }
     exibirMenu() {
+        //LENDO OS PERFIS SALVOS
+        this.carregarArquivoTxtPerfis();
+        //LENDO AS POSTAGENS SALVAS
+        this.carregarArquivoTxtPostagens();
         let opcao = 0;
         while (opcao !== 7) {
             console.log("\n \n \n ");
@@ -72,6 +81,8 @@ class App {
             perfil_cadrastrado = new Perfil(id_novo_perfil, nome, email);
             lista_de_perfis_cadrastrados.push(perfil_cadrastrado);
         }
+        //  >>>>>>>>>>>Salvar no arquivo de texto 'perfis.txt'<<<<<<<<<<<<
+        this.salvarOsPerfisEmArquivoTxt();
     }
     consultarPerfil() {
         console.log("\n \n \n");
@@ -85,10 +96,134 @@ class App {
             console.log(`\n usuario nao encontrado!!!!!\n`);
         }
         else {
-            console.log(`\n Usuario com nome '${nome_do_usuario_procurado}' : \n`);
+            console.log(`\n Usuario com nome '${nome_do_usuario_procurado}' : `);
             console.log(resultado_da_consulta);
         }
     }
+    //>>>>>>>>>>PERSISTENCIA DE DADOS
+    carregarArquivoTxtPerfis() {
+        try {
+            let perfis_gravados_no_arquivo_txt = JSON.parse(fs.readFileSync(this.caminho_arquivo_perfis, "utf-8"));
+            for (const objeto_atual of perfis_gravados_no_arquivo_txt) {
+                let objeto_convertido_em_perfil = new Perfil(objeto_atual._id, objeto_atual._nome, objeto_atual._email);
+                for (const postagem_atual of objeto_atual._postagens) {
+                    objeto_convertido_em_perfil.adicicionarPostagens(postagem_atual);
+                }
+                console.log(objeto_convertido_em_perfil);
+                this._redeSocial.getRepositorioDePerfis().incluir(objeto_convertido_em_perfil);
+            }
+        }
+        catch (error) {
+            this._redeSocial.getRepositorioDePerfis().setPerfis([]);
+        }
+    }
+    salvarOsPerfisEmArquivoTxt() {
+        let lista_de_perfis_cadrastrados = this._redeSocial.getRepositorioDePerfis().getPerfis();
+        fs.writeFileSync(this.caminho_arquivo_perfis, JSON.stringify(lista_de_perfis_cadrastrados), "utf-8");
+    }
+    /*
+    carregarArquivoTxtPostagens(){
+      try {
+          let postagens_gravadas_no_arquivo_txt=JSON.parse(fs.readFileSync(this.caminho_arquivo_postagens,"utf-8"))
+          
+          for (const objeto_atual of postagens_gravadas_no_arquivo_txt) {
+              //Caso postagem avancada
+              if(objeto_atual._hashtags!=undefined){
+                 let objeto_convertido_em_postagem_avancada=new PostagemAvancada(objeto_atual._id,objeto_atual._texto,objeto_atual._curtida,objeto_atual._descurtida,objeto_atual._data,objeto_atual. _perfil,[],objeto_atual._visualizacoesRestantes)
+                 for (const hashtag_atual of objeto_atual._hashtags) {
+                    objeto_convertido_em_postagem_avancada.adicionarHashtag(hashtag_atual)
+                 }
+                 this._redeSocial.getRepositorioDePostagens().incluir(objeto_convertido_em_postagem_avancada)
+  
+              }
+  
+              //Caso postagem simples
+              else{
+                  let objeto_convertido_em_postagem=new Postagem(objeto_atual._id,objeto_atual._texto,objeto_atual._curtida,objeto_atual._descurtida,objeto_atual._data,objeto_atual. _perfil)
+                  this._redeSocial.getRepositorioDePostagens().incluir(objeto_convertido_em_postagem)
+  
+              }
+          }
+  
+      }
+      catch (error) {
+          this._redeSocial.getRepositorioDePostagens().setPostagens([])
+      }
+  
+    }
+  
+  
+    salvarAsPostagensEmArquivoTxt(){
+      const removerReferenciasCirculares=(obj:Object)=>{
+          const seen = new WeakSet();
+          return JSON.parse(JSON.stringify(obj, function(key, value) {
+              if (typeof value === 'object' && value !== null) {
+                  if (seen.has(value)) {
+                      return; // Remove a referência circular
+                  }
+                  seen.add(value);
+              }
+              return value;
+          }));
+      }
+    
+      let postagensSemReferenciasCirculares = removerReferenciasCirculares(this._redeSocial.getRepositorioDePostagens().getPostagens());
+      console.log(postagensSemReferenciasCirculares)
+      fs.writeFileSync(this.caminho_arquivo_postagens, JSON.stringify(postagensSemReferenciasCirculares), "utf-8");
+      
+      /*let lista_de_postagens_cadastradas=this._redeSocial.getRepositorioDePostagens().getPostagens()
+      console.log(lista_de_postagens_cadastradas)
+      fs.writeFileSync(this.caminho_arquivo_postagens,JSON.stringify(lista_de_postagens_cadastradas),"utf-8")
+      
+  
+    }
+    */
+    carregarArquivoTxtPostagens() {
+        const arquivo = fs.readFileSync(this.caminho_arquivo_postagens, 'utf-8');
+        if (arquivo != "" && arquivo != " ") {
+            //const linhas: string[] = arquivo.split('\n');
+            const linhas = arquivo.split('\r\n');
+            console.log("Iniciando leitura de arquivo");
+            for (let i = 0; i < linhas.length; i++) {
+                let linhaConta = linhas[i].split(";");
+                let postagem;
+                let tipo = linhaConta[3];
+                if (tipo == 'PA') {
+                    let perfil_da_postagem = this._redeSocial.getRepositorioDePerfis().consultarPorId(Number(linhaConta[5]));
+                    let lista_de_hashtags_sem_hash = linhaConta[6].split("#");
+                    let lista_de_hashtags_pronta = [];
+                    for (const hashtag_atual of lista_de_hashtags_sem_hash) {
+                        lista_de_hashtags_pronta.push(`#${hashtag_atual}`);
+                    }
+                    postagem = new PostagemAvancada(Number(linhaConta[0]), linhaConta[1], Number(linhaConta[2]), Number(linhaConta[4]), new Date(linhaConta[5]), perfil_da_postagem, lista_de_hashtags_pronta, Number(linhaConta[7]));
+                    console.log(postagem);
+                }
+                else if (tipo == 'P') {
+                    let perfil_da_postagem = this._redeSocial.getRepositorioDePerfis().consultarPorId(Number(linhaConta[5]));
+                    postagem = new Postagem(Number(linhaConta[0]), linhaConta[1], Number(linhaConta[2]), Number(linhaConta[4]), new Date(linhaConta[5]), perfil_da_postagem);
+                    console.log(postagem);
+                }
+                this._redeSocial.getRepositorioDePostagens().incluir(postagem);
+            }
+        }
+    }
+    salvarAsPostagensEmArquivoTxt() {
+        let stringPostagem = "";
+        let linha = "";
+        for (let postagem_atual of this._redeSocial.getRepositorioDePostagens().getPostagens()) {
+            if (postagem_atual instanceof PostagemAvancada) {
+                linha = `${postagem_atual.getId()};${postagem_atual.getTexto()};${postagem_atual.getCurtida()};PA;${postagem_atual.getDescurtida()};${postagem_atual.getData()};${postagem_atual.getPerfil().getId()};${postagem_atual.getHashtagEmString()};${postagem_atual.getVisualizacoesRestantes()}\r\n`;
+            }
+            else {
+                linha = `${postagem_atual.getId()};${postagem_atual.getTexto()};${postagem_atual.getCurtida()};P;${postagem_atual.getDescurtida()};${postagem_atual.getData()};${postagem_atual.getPerfil().getId()}\r\n`;
+            }
+            stringPostagem += linha;
+        }
+        //deleta os últimos \r\n da string que vai pro arquivo, evitando que grave uma linha vazia
+        stringPostagem = stringPostagem.slice(0, stringPostagem.length - 2);
+        fs.writeFileSync(this.caminho_arquivo_postagens, stringPostagem, 'utf-8');
+    }
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     incluirPostagem() {
         console.log("\n \n \n");
         console.log("|---------------------------------|");
@@ -126,6 +261,7 @@ class App {
             this._redeSocial.getRepositorioDePostagens().incluir(postagem_atual);
             //salvando postagem na lista de postagem do usuario autor
             resultado_da_consulta_pelo_perfil_do_autor_da_postagem.adicicionarPostagens(postagem_atual);
+            //  >>>>>>>>>>>Salvar no arquivo de texto 'postagens.txt'<<<<<<<<<<<<
         }
         if (tipo_da_postagem == 2) {
             let texto_da_postagem = input.question("\n \n Digite o texto da postagem:   \n");
@@ -165,6 +301,8 @@ class App {
             //salvando postagem na lista de postagem do usuario autor
             resultado_da_consulta_pelo_perfil_do_autor_da_postagem.adicicionarPostagens(postagem_atual);
         }
+        //SALVAR postagens em arquivo "postagens.txt"
+        this.salvarAsPostagensEmArquivoTxt();
     }
     consultarPostagens() {
         console.log("\n\n\n");

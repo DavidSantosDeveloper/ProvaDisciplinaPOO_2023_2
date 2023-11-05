@@ -1,0 +1,2 @@
+1;oi;0;P;0;Sun Nov 05 2023 19:09:47 GMT-0300 (Horário Padrão de Brasília);1
+2;teste;0;PA;0;Sun Nov 05 2023 19:11:12 GMT-0300 (Horário Padrão de Brasília);1;##obrigado Senhor. ;15
