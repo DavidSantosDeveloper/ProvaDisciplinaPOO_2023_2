@@ -16,6 +16,9 @@ class PostagemAvancada extends Postagem {
     getVisualizacoesRestantes() {
         return this._visualizacoesRestantes;
     }
+    setVisualizacoesRestantes(visualizacoesRestantes) {
+        this._visualizacoesRestantes = visualizacoesRestantes;
+    }
     adicionarHashtag(hashtag) {
         this._hashtags.push(hashtag);
     }

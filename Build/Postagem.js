@@ -14,6 +14,9 @@ class Postagem {
     getTexto() {
         return this._texto;
     }
+    setTexto(texto) {
+        this._texto = texto;
+    }
     getCurtida() {
         return this._curtida;
     }
@@ -33,7 +36,7 @@ class Postagem {
         this._descurtida++;
     }
     ehPopular() {
-        if (this._curtida > this._descurtida) {
+        if (this._curtida >= 1.5 * this._descurtida) {
             return true;
         }
         else {

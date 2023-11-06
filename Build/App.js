@@ -27,11 +27,16 @@ class App {
             console.log("╚═══════════════════════════════╝");
             console.log("\n \n 1. Incluir Perfil");
             console.log("2. Consultar Perfil");
-            console.log("3. Incluir Postagem");
-            console.log("4. Consultar Postagens");
-            console.log("5. Curtir Postagem");
-            console.log("6. Descurtir Postagem");
-            console.log("7. Sair \n");
+            console.log("3. Editar Perfil");
+            console.log("4-Excluir Perfil;");
+            console.log("5. Incluir Postagem");
+            console.log("6. Consultar Postagens");
+            console.log("7. Editar Postagem");
+            console.log("8. Excluir Postagem");
+            console.log("9-Exibir as postagens populares que ainda podem ser exibidas;");
+            console.log("10. Curtir Postagem");
+            console.log("11. Descurtir Postagem");
+            console.log("12. Sair \n");
             opcao = this.obterOpcao();
             if (opcao == 1) {
                 this.incluirPerfil();
@@ -40,19 +45,36 @@ class App {
                 this.consultarPerfil();
             }
             if (opcao == 3) {
-                this.incluirPostagem();
+                this.EditarPerfil();
             }
             if (opcao == 4) {
-                this.consultarPostagens();
+                this.excluirPerfil();
             }
             if (opcao == 5) {
-                this.curtirPostagem();
+                this.incluirPostagem();
             }
             if (opcao == 6) {
-                this.descurtirPostagem();
+                this.consultarPostagens();
             }
             if (opcao == 7) {
+                this.EditarPostagens();
+            }
+            if (opcao == 8) {
+                this.excluirPostagens();
+            }
+            if (opcao == 9) {
+                this.mostrarPostagensPopulares();
+            }
+            if (opcao == 10) {
+                this.curtirPostagem();
+            }
+            if (opcao == 11) {
+                this.descurtirPostagem();
+            }
+            if (opcao == 12) {
                 console.log("Fechando...");
+                this.salvarAsPostagensEmArquivoTxt();
+                this.salvarOsPerfisEmArquivoTxt();
                 break;
             }
         }
@@ -98,6 +120,108 @@ class App {
         else {
             console.log(`\n Usuario com nome '${nome_do_usuario_procurado}' : `);
             console.log(resultado_da_consulta);
+        }
+    }
+    EditarPerfil() {
+        console.log("\n \n \n");
+        console.log("|---------------------------------|");
+        console.log("|      Editar Perfil              |");
+        console.log("|---------------------------------|");
+        let nome_do_usuario_procurado = input.question("\n Digite o nome do usuario:");
+        let resultado_da_consulta = this._redeSocial.getRepositorioDePerfis().consultarPorNome(nome_do_usuario_procurado);
+        //FAIL FAST
+        if (resultado_da_consulta == null) {
+            console.log(`\n usuario nao encontrado!!!!!\n`);
+        }
+        else {
+            let nome;
+            let email;
+            let opcao1 = input.question(" Editar nome (s-SIM s-NAO) ?");
+            if (opcao1.toUpperCase() == "S") {
+                nome = input.question("Digite o nome:");
+                resultado_da_consulta.setNome(nome);
+            }
+            let opcao2 = input.question(" Editar email (s-SIM s-NAO) ?");
+            if (opcao2.toUpperCase() == "S") {
+                email = input.question("Digite o email:");
+                resultado_da_consulta.setEmail(email);
+            }
+            this.salvarOsPerfisEmArquivoTxt();
+            console.log(`\n Usuario com nome '${nome_do_usuario_procurado}' : `);
+            console.log(resultado_da_consulta);
+        }
+    }
+    excluirPerfil() {
+        console.log("\n \n \n");
+        console.log("|---------------------------------|");
+        console.log("|      Excluir   Perfil           |");
+        console.log("|---------------------------------|");
+        let nome_do_usuario_procurado = input.question("\n Digite o nome do usuario que sera excluido:");
+        let resultado_da_consulta = this._redeSocial.getRepositorioDePerfis().consultarPorNome(nome_do_usuario_procurado);
+        //FAIL FAST
+        if (resultado_da_consulta == null) {
+            console.log(`\n usuario nao encontrado!!!!!\n`);
+        }
+        else {
+            let lista_de_perfis = this._redeSocial.getRepositorioDePerfis().getPerfis();
+            let lista_de_perfis_atualizada = [];
+            for (const perfil_atual of lista_de_perfis) {
+                if (perfil_atual.getNome() != nome_do_usuario_procurado) {
+                    lista_de_perfis_atualizada.push(perfil_atual);
+                }
+            }
+            this._redeSocial.getRepositorioDePerfis().setPerfis(lista_de_perfis_atualizada);
+            this.salvarOsPerfisEmArquivoTxt();
+            console.log(`\n Usuario com nome '${nome_do_usuario_procurado} excluido' : `);
+        }
+    }
+    mostrarPostagensPopulares() {
+        let lista_de_postagens = this._redeSocial.getRepositorioDePostagens().getPostagens();
+        let lista_de_postagens_simples = [];
+        let lista_de_postagens_avancadas = [];
+        for (const postagem_atual of lista_de_postagens) {
+            if (postagem_atual instanceof PostagemAvancada) {
+                if (postagem_atual.ehPopular() && postagem_atual.getVisualizacoesRestantes() > 0) {
+                    lista_de_postagens_avancadas.push(postagem_atual);
+                }
+            }
+            else {
+                if (postagem_atual.ehPopular()) {
+                    lista_de_postagens_simples.push(postagem_atual);
+                }
+            }
+        }
+        let numero_postagem_simples = 1;
+        for (const postagem_atual of lista_de_postagens_simples) {
+            console.log(` \n               *POSTAGEM ${numero_postagem_simples}* 
+                   _________________________________________________________________________________________
+                   | ID: ${postagem_atual.getId()}                        DATA:${postagem_atual.getData()}  |                   |
+                   |________________________________________________________________________________________|
+                   |>>>> AUTOR: @ ${postagem_atual.getPerfil().getNome()}                                   |
+                   |>>>> TEXTO: ${postagem_atual.getTexto()}                                                |
+                   |>>>> CURTIDAS: ${postagem_atual.getCurtida()}                                           |
+                   |>>>> DESCURTIDAS: ${postagem_atual.getDescurtida()}                                     |
+                   |________________________________________________________________________________________|
+
+       `);
+            numero_postagem_simples++;
+        }
+        let numero_postagem_avancada = 1;
+        for (const postagem_atual of lista_de_postagens_avancadas) {
+            console.log(`                \n *POSTAGEM AVANCADA${numero_postagem_avancada}* 
+                   _________________________________________________________________________________________
+                   | ID: ${postagem_atual.getId()}                        DATA:${postagem_atual.getData()}  |                  
+                   |________________________________________________________________________________________|
+                   |>>>> AUTOR: @ ${postagem_atual.getPerfil().getNome()}                                   |
+                   |>>>> TEXTO: ${postagem_atual.getTexto()}                                                |
+                   |>>>> CURTIDAS: ${postagem_atual.getCurtida()}                                           |
+                   |>>>> DESCURTIDAS: ${postagem_atual.getDescurtida()}                                     |
+                   |>>>> HASHTAGS:${postagem_atual.getHashtagEmString()}                                    |
+                   |>>>> VISUALIZACOES RESTANTES:${postagem_atual.getVisualizacoesRestantes()}              |
+                   |________________________________________________________________________________________|
+
+       `);
+            numero_postagem_avancada++;
         }
     }
     //>>>>>>>>>>PERSISTENCIA DE DADOS
@@ -183,7 +307,6 @@ class App {
         if (arquivo != "" && arquivo != " ") {
             //const linhas: string[] = arquivo.split('\n');
             const linhas = arquivo.split('\r\n');
-            console.log("Iniciando leitura de arquivo");
             for (let i = 0; i < linhas.length; i++) {
                 let linhaConta = linhas[i].split(";");
                 let postagem;
@@ -303,6 +426,74 @@ class App {
         }
         //SALVAR postagens em arquivo "postagens.txt"
         this.salvarAsPostagensEmArquivoTxt();
+    }
+    EditarPostagens() {
+        console.log("\n \n \n");
+        console.log("|---------------------------------|");
+        console.log("|      Editar Postagem            |");
+        console.log("|---------------------------------|");
+        let id_postagem = Number(input.question("\n Digite o nome do usuario:"));
+        let resultado_da_consulta = this._redeSocial.getRepositorioDePostagens().consultarPorID(id_postagem);
+        //FAIL FAST
+        if (resultado_da_consulta == null) {
+            console.log(`\n postagem nao encontrada!!!!!\n`);
+        }
+        else {
+            let texto;
+            let hashtag;
+            let max_visualizacao;
+            let opcao1 = input.question(" Editar texto (s-SIM s-NAO) ?");
+            let opcao2;
+            let opcao3;
+            if (opcao1.toUpperCase() == "S") {
+                texto = input.question("Digite o texto:");
+                resultado_da_consulta.setTexto(texto);
+            }
+            if (resultado_da_consulta instanceof PostagemAvancada) {
+                opcao2 = input.question(" Editar hastag (s-SIM s-NAO) ?");
+                if (opcao2.toUpperCase() == "S") {
+                    let contador = 1;
+                    while (true) {
+                        hashtag = input.question(`Digite a ${contador} hashtag: `);
+                        resultado_da_consulta.adicionarHashtag(`#${hashtag}`);
+                        contador++;
+                        let perguta = input.question(`Cadrastar mais hastags (s-Sim n-Nao)`);
+                        if (perguta.toUpperCase() == "N") {
+                            break;
+                        }
+                    }
+                }
+                opcao3 = input.question(" Editar numero maximo de visualizacoes (s-SIM s-NAO) ?");
+                if (opcao3.toUpperCase() == "S") {
+                    max_visualizacao = input.question("Digite o numero maximo de visualizacoes:");
+                }
+            }
+            console.log(`\n Usuario com id '${id_postagem} atualizado!!!' : `);
+        }
+    }
+    excluirPostagens() {
+        console.log("\n \n \n");
+        console.log("|---------------------------------|");
+        console.log("|      Excluir   Postagens        |");
+        console.log("|---------------------------------|");
+        let id_postagem_exluida = Number(input.question("\n Digite o ID da postagem que sera excluida:"));
+        let resultado_da_consulta = this._redeSocial.getRepositorioDePostagens().consultarPorID(id_postagem_exluida);
+        //FAIL FAST
+        if (resultado_da_consulta == null) {
+            console.log(`\n  ID da postagem nao encontrado!!!!!\n`);
+        }
+        else {
+            let lista_de_postagens = this._redeSocial.getRepositorioDePostagens().getPostagens();
+            let lista_de_postagens_atualizada = [];
+            for (const postagem_atual of lista_de_postagens) {
+                if (postagem_atual.getId() != id_postagem_exluida) {
+                    lista_de_postagens_atualizada.push(postagem_atual);
+                }
+            }
+            this._redeSocial.getRepositorioDePostagens().setPostagens(lista_de_postagens_atualizada);
+            this.salvarAsPostagensEmArquivoTxt();
+            console.log(`\n Postagem com id '${id_postagem_exluida} excluido' : `);
+        }
     }
     consultarPostagens() {
         console.log("\n\n\n");

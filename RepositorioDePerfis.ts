@@ -2,7 +2,7 @@ import {Perfil} from './Perfil.js'
 export {RepositorioDePerfis}
 
 class RepositorioDePerfis{
-    private _perfis: Perfil[];
+    private _perfis: Perfil[]=[];
     constructor(perfis:Perfil[]){
         this._perfis=perfis
     }
@@ -10,8 +10,10 @@ class RepositorioDePerfis{
     getPerfis(){
         return this._perfis
     }
+    setPerfis(lista_de_perfis:Perfil[]){
+        this._perfis=lista_de_perfis
+    }
     incluir(perfil: Perfil): void{
-
         this._perfis.push(perfil)
     }
     consultarPorNome(nome_procurado: string){
@@ -21,6 +23,15 @@ class RepositorioDePerfis{
                 resultado_da_consulta=perfil_atual
             }
         }
+        return resultado_da_consulta
+    }
+    consultarPorId(id: number){
+        let resultado_da_consulta: Perfil | null=null;
+            for (const perfil_atual of this._perfis) {
+                if(perfil_atual.getId()==id){
+                    resultado_da_consulta=perfil_atual
+                }
+            }
         return resultado_da_consulta
     }
     consultar(id?: number, nome?: string, email?: string): Perfil | null{

@@ -12,6 +12,12 @@ class Perfil {
     getNome() {
         return this._nome;
     }
+    setNome(nome) {
+        this._nome = nome;
+    }
+    setEmail(email) {
+        this._email = email;
+    }
     getEmail() {
         return this._email;
     }
